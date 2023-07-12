@@ -4,15 +4,19 @@ using System.Linq;
 
 public partial class Inventory : Node
 {
+	[Export]
+	public string inventoryName { get; set; } = "Default Inventory Name";
 	public int inventorySize = 30; //Default amount of items for player, not so for storage units.
 	public Item[] stored; //Array containing said items.
+	public NinePatchRect NPR;
 	public override void _Ready(){
-		Name = "Inventory";
 		stored = new Item[inventorySize];
 		for(int i = 0; i<inventorySize; i++){
 			stored[i] = new Item();
 		}
 		populateGrid();
+		NPR = GetNode<NinePatchRect>("CanvasLayer/NinePatchRect");
+		GetNode<RichTextLabel>("CanvasLayer/NinePatchRect/MarginContainer/RichTextLabel").Text = "[center]" + inventoryName + "[center]";
 	}
 	public void populateGrid(){
 		GridContainer backgroundGrid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainerBackground");
@@ -26,6 +30,9 @@ public partial class Inventory : Node
 			backgroundRect.Texture = ItemBase.emptyItemFrame;
 			backgroundGrid.AddChild(backgroundRect);
 			grid.AddChild(stored[i].modelTextureRect.Duplicate());
+		}
+		foreach(TextureRect tr in grid.GetChildren()){
+			tr.GuiInput += _ItemGuiInput;
 		}
 	} 
 	public bool isInventoryFull(){
@@ -72,6 +79,41 @@ public partial class Inventory : Node
 	}
 	public override void _Process(double delta){
 
+	}
+	bool isNPRPressed;
+	Vector2 pressedNPRPoint;
+	public void _GuiInput(InputEvent @event){ //Dragging window, this function is connected to the NPR
+		if (@event is InputEventMouseButton mb){
+			if (mb.ButtonIndex == MouseButton.Left && mb.Pressed){
+				pressedNPRPoint = mb.Position;
+				isNPRPressed = true;
+			}
+			else
+				isNPRPressed = false;
+		}
+		if (@event is InputEventMouseMotion mm){
+			if(isNPRPressed){
+				NPR.Position += mm.Position - pressedNPRPoint;
+			}
+		}
+	}
+	bool isItemPressed;
+	Vector2 pressedItemPoint;
+	public void _ItemGuiInput(InputEvent @event){
+		if (@event is InputEventMouseButton mb){
+			GD.Print(@event);
+			if (mb.ButtonIndex == MouseButton.Left && mb.Pressed){
+				pressedItemPoint = mb.Position;
+				isItemPressed = true;
+			}
+			else
+				isItemPressed = false;
+		}
+		if (@event is InputEventMouseMotion mm){
+			if(isItemPressed){
+				NPR.Position += mm.Position - pressedItemPoint;
+			}
+		}
 	}
 }
 public partial class Item{

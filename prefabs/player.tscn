@@ -1,4 +1,4 @@
-[gd_scene load_steps=31 format=3 uid="uid://c7uvptraenyxj"]
+[gd_scene load_steps=30 format=3 uid="uid://c7uvptraenyxj"]
 
 [ext_resource type="Script" path="res://scripts/player/playerMain.cs" id="1_ybco8"]
 [ext_resource type="Texture2D" uid="uid://dpjs64clfvmtp" path="res://resources/sprites/player/standing/player_standing1.png" id="2_am2ee"]
@@ -26,8 +26,7 @@
 [ext_resource type="Texture2D" uid="uid://uydn443ucr4h" path="res://resources/sprites/player/walking/right/player_walking_right2.png" id="24_qxk8a"]
 [ext_resource type="Texture2D" uid="uid://b211cbcs40ul" path="res://resources/sprites/player/walking/right/player_walking_right3.png" id="25_8r2gg"]
 [ext_resource type="Texture2D" uid="uid://bihm0wt3h6xst" path="res://resources/sprites/player/walking/right/player_walking_right4.png" id="26_hw5i6"]
-[ext_resource type="Script" path="res://scripts/Inventory.cs" id="27_8c6y3"]
-[ext_resource type="Texture2D" uid="uid://c7v3ys5adgvpw" path="res://resources/sprites/panels/nine-patch-window.png" id="28_0l26m"]
+[ext_resource type="PackedScene" uid="uid://c854n4hi5rmqb" path="res://prefabs/inventory.tscn" id="27_th0gc"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_4td0g"]
 animations = [{
@@ -159,53 +158,6 @@ wait_time = 0.1
 one_shot = true
 autostart = true
 
-[node name="Node" type="Node" parent="."]
-script = ExtResource("27_8c6y3")
-
-[node name="CanvasLayer" type="CanvasLayer" parent="Node"]
-
-[node name="NinePatchRect" type="NinePatchRect" parent="Node/CanvasLayer"]
-custom_minimum_size = Vector2(320, 220)
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -320.0
-offset_top = -160.0
-offset_bottom = 40.0
-grow_horizontal = 0
-grow_vertical = 2
-texture = ExtResource("28_0l26m")
-patch_margin_left = 8
-patch_margin_top = 8
-patch_margin_right = 6
-patch_margin_bottom = 19
-
-[node name="MarginContainer" type="MarginContainer" parent="Node/CanvasLayer/NinePatchRect"]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 32
-
-[node name="GridContainerBackground" type="GridContainer" parent="Node/CanvasLayer/NinePatchRect/MarginContainer"]
-layout_mode = 2
-theme_override_constants/h_separation = 2
-theme_override_constants/v_separation = 2
-columns = 6
-
-[node name="GridContainer" type="GridContainer" parent="Node/CanvasLayer/NinePatchRect/MarginContainer"]
-layout_mode = 2
-theme_override_constants/h_separation = 2
-theme_override_constants/v_separation = 2
-columns = 6
+[node name="Inventory" parent="." instance=ExtResource("27_th0gc")]
 
 [connection signal="timeout" from="StepTimer" to="." method="_StepTimeout"]

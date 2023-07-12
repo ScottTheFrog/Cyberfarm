@@ -1,0 +1,78 @@
+[gd_scene load_steps=5 format=3 uid="uid://c854n4hi5rmqb"]
+
+[ext_resource type="Script" path="res://scripts/Inventory.cs" id="1_df8ri"]
+[ext_resource type="Texture2D" uid="uid://c7v3ys5adgvpw" path="res://resources/sprites/panels/nine-patch-window.png" id="2_g3j7w"]
+[ext_resource type="FontFile" uid="uid://ct6pjopacsbrk" path="res://fonts/joystix monospace.otf" id="3_2gdt7"]
+
+[sub_resource type="Theme" id="Theme_qo1a5"]
+RichTextLabel/font_sizes/normal_font_size = 14
+RichTextLabel/fonts/normal_font = ExtResource("3_2gdt7")
+
+[node name="Inventory" type="Node"]
+script = ExtResource("1_df8ri")
+inventoryName = "Inventory"
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="NinePatchRect" type="NinePatchRect" parent="CanvasLayer"]
+custom_minimum_size = Vector2(320, 240)
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -160.0
+offset_top = -120.0
+offset_right = 160.0
+offset_bottom = 120.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+texture = ExtResource("2_g3j7w")
+patch_margin_left = 8
+patch_margin_top = 8
+patch_margin_right = 6
+patch_margin_bottom = 19
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/NinePatchRect"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 32
+
+[node name="GridContainerBackground" type="GridContainer" parent="CanvasLayer/NinePatchRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 6
+
+[node name="GridContainer" type="GridContainer" parent="CanvasLayer/NinePatchRect/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+mouse_filter = 0
+theme_override_constants/h_separation = 2
+theme_override_constants/v_separation = 2
+columns = 6
+
+[node name="RichTextLabel" type="RichTextLabel" parent="CanvasLayer/NinePatchRect/MarginContainer"]
+layout_mode = 2
+size_flags_vertical = 8
+theme = SubResource("Theme_qo1a5")
+theme_override_colors/default_color = Color(0.627451, 0.870588, 0.839216, 1)
+bbcode_enabled = true
+text = "3efef"
+fit_content = true
+scroll_active = false
+
+[connection signal="gui_input" from="CanvasLayer/NinePatchRect" to="." method="_GuiInput"]
