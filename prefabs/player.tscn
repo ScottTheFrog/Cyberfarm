@@ -160,4 +160,8 @@ autostart = true
 
 [node name="Inventory" parent="." instance=ExtResource("27_th0gc")]
 
+[node name="TextureRect" type="TextureRect" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+
 [connection signal="timeout" from="StepTimer" to="." method="_StepTimeout"]
