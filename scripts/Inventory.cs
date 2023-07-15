@@ -6,18 +6,27 @@ public partial class Inventory : Node
 {
 	[Export]
 	public string inventoryName { get; set; } = "Default Inventory Name";
+	[Export]
 	public int inventorySize = 30; //Default amount of items for player, not so for storage units.
 	public Item[] stored; //Array containing said items.
 	public NinePatchRect NPR;
 	public GridContainer grid;
+	public CanvasLayer cnvLayer;
+	[Signal]
+	public delegate void itemInventoryDirectionEventHandler(InvSignal info);
+	[Signal]
+	public delegate void onFocusEventHandler(string invName);
 	public override void _Ready(){
 		stored = new Item[inventorySize];
 		for(int i = 0; i<inventorySize; i++){
 			stored[i] = new Item(0);
 		}
 		populateGrid();
+		cnvLayer = GetNode<CanvasLayer>("CanvasLayer");
 		NPR = GetNode<NinePatchRect>("CanvasLayer/NinePatchRect");
 		GetNode<RichTextLabel>("CanvasLayer/NinePatchRect/MarginContainer/RichTextLabel").Text = "[center]" + inventoryName + "[center]";
+		autoload_1 autoloadNode = GetNode<autoload_1>("/root/Autoload1");
+		autoloadNode.addToInventories(this);
 	}
 	public void populateGrid(){
 		GridContainer backgroundGrid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainerBackground");
@@ -25,12 +34,11 @@ public partial class Inventory : Node
 		for (int i = 0; i < 15; i++){ //TEST CODE
 			addItem(new Item(new RandomNumberGenerator().RandiRange(1,4)));
 		}
-		for(int i= 0; i < 30; i++){
+		for(int i= 0; i < inventorySize; i++){
 			TextureRect backgroundRect = new TextureRect();
 			backgroundRect.Texture = ItemBase.emptyItemFrame;
 			backgroundGrid.AddChild(backgroundRect);
 			TextureRect foregroundRect = stored[i].modelTextureRect.Duplicate() as TextureRect;
-			foregroundRect.EditorDescription = i.ToString();
 			grid.AddChild(foregroundRect);
 		}
 		foreach(TextureRect tr in grid.GetChildren()){
@@ -62,11 +70,19 @@ public partial class Inventory : Node
 			return;		//If inventory is full, then do nothing.
 		stored[nextFreeIndex()] = newItem;
 	}
-	public void transferItemTo(Inventory otherInventory, int itemIndex){ //Moves item from inventory to another.
+	public bool transferItemTo(Inventory otherInventory, int itemIndex){ //Moves item from inventory to another.
 		if(otherInventory.isInventoryFull())
-			return;		//If inventory is full, then do nothing.
+			return false;		//If inventory is full, then do nothing.
 		otherInventory.stored[otherInventory.nextFreeIndex()] = stored[itemIndex];
-		stored[itemIndex] = new Item();
+		stored[itemIndex] = new Item(0);
+		return true;
+	}
+	public void exchangeItems(Inventory otherInventory, int itemIndex, int otherItemIndex){ 
+		Item otherItem = otherInventory.stored[otherItemIndex];
+		GD.Print(otherItemIndex);
+		GD.Print(itemIndex);
+		otherInventory.stored[otherItemIndex] = stored[itemIndex];
+		stored[itemIndex] = otherItem;
 	}
 	public int getItemId(int itemIndex){
 		return stored[itemIndex].id;
@@ -94,6 +110,7 @@ public partial class Inventory : Node
 			if (mb.ButtonIndex == MouseButton.Left && mb.Pressed){
 				pressedNPRPoint = mb.Position;
 				isNPRPressed = true;
+				EmitSignal(SignalName.onFocus, inventoryName);
 			}
 			else
 				isNPRPressed = false;
@@ -104,10 +121,10 @@ public partial class Inventory : Node
 			}
 		}
 	}
-	bool isItemPressed;
+	public bool isItemPressed;
 	Vector2 pressedItemPoint;
 	Vector2 originalPosition;
-	TextureRect pickedNode = new TextureRect();
+	public TextureRect pickedNode = new TextureRect();
 	public void _ItemGuiInput(InputEvent @event){
 		if (@event is InputEventMouseButton mb){
 			if (mb.ButtonIndex == MouseButton.Left && mb.Pressed){
@@ -122,6 +139,7 @@ public partial class Inventory : Node
 							pickedNode = nod;
 							originalPosition = pickedNode.Position;
 							pickedNode.ZIndex = 10;
+							EmitSignal(SignalName.onFocus, inventoryName);
 							return;
 						}
 					}
@@ -134,21 +152,24 @@ public partial class Inventory : Node
 							continue;
 						shouldPickUp = nod.GetGlobalRect().HasPoint(pressedItemPoint);
 						if (shouldPickUp){
+							GD.Print(pickedNode.GetIndex());
+							GD.Print(nod.GetIndex());
 							pickedNode.Position = nod.Position; //move old node to new one position.
-							moveItemTo(Int32.Parse(pickedNode.EditorDescription), Int32.Parse(nod.EditorDescription));
-							string tempDescription = nod.EditorDescription;
-							nod.EditorDescription = pickedNode.EditorDescription;
-							pickedNode.EditorDescription = tempDescription;
-							pickedNode.ZIndex = 0;
-							pickedNode = nod; //new node picked up //// all of this part will ALWAYS MOVE items with nothing in it, but they are unnoticed.
+							moveItemTo(pickedNode.GetIndex(), nod.GetIndex());
+							nod.Texture = pickedNode.Texture;
+							pickedNode.Texture = stored[pickedNode.GetIndex()].modelTextureRect.Texture;
 							pickedNode.ZIndex = 10;
-							if (stored[Int32.Parse(pickedNode.EditorDescription)].id != 0)
+							EmitSignal(SignalName.onFocus, inventoryName);
+							
+							if (stored[pickedNode.GetIndex()].id != 0)
 								return;
 						}
 					}
+					InvSignal signalInfo = new InvSignal(inventoryName, pickedNode.GetIndex());
+					EmitSignal(SignalName.itemInventoryDirection, signalInfo);
 					isItemPressed = false;
+					pickedNode.ZIndex = 0;
 					pickedNode.Position = originalPosition;
-					pickedNode = new TextureRect();
 				}
 			}	
 		}
@@ -156,6 +177,14 @@ public partial class Inventory : Node
 	public void movePickedItem(){
 		if(isItemPressed)
 			pickedNode.Position += GetViewport().GetMousePosition() - pickedNode.Position - NPR.Position - grid.Position - new Vector2(16,16);
+	}
+}
+public partial class InvSignal : GodotObject{
+	public string invName {get; set;}
+	public int itemIndex {get; set;}
+	public InvSignal(string nam, int indx){
+		invName = nam;
+		itemIndex = indx;
 	}
 }
 public class Item{

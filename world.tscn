@@ -1,3 +1,37 @@
-[gd_scene format=3 uid="uid://caeme5iuqwnnh"]
+[gd_scene load_steps=5 format=3 uid="uid://caeme5iuqwnnh"]
+
+[ext_resource type="PackedScene" uid="uid://c7uvptraenyxj" path="res://prefabs/player.tscn" id="1_pacnt"]
+[ext_resource type="Texture2D" uid="uid://b6et14lhrckes" path="res://resources/sprites/stations/BIO-S.png" id="2_50phe"]
+[ext_resource type="PackedScene" uid="uid://c854n4hi5rmqb" path="res://prefabs/inventory.tscn" id="2_gwbmj"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oujdc"]
+size = Vector2(55, 13)
 
 [node name="Node2D" type="Node2D"]
+
+[node name="player" parent="." instance=ExtResource("1_pacnt")]
+position = Vector2(385.787, 241.855)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="Inventory" parent="StaticBody2D" instance=ExtResource("2_gwbmj")]
+inventoryName = "BIO.S"
+inventorySize = 50
+
+[node name="NinePatchRect" parent="StaticBody2D/Inventory/CanvasLayer" index="0"]
+custom_minimum_size = Vector2(320, 340)
+anchors_preset = 4
+anchor_left = 0.0
+anchor_right = 0.0
+offset_left = 0.0
+offset_right = 320.0
+grow_horizontal = 1
+
+[node name="Sprite2D" type="Sprite2D" parent="StaticBody2D"]
+texture = ExtResource("2_50phe")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 34.5)
+shape = SubResource("RectangleShape2D_oujdc")
+
+[editable path="StaticBody2D/Inventory"]
