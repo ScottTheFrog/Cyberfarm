@@ -44,6 +44,7 @@ public partial class Inventory : Node
 		foreach(TextureRect tr in grid.GetChildren()){
 			tr.GuiInput += _ItemGuiInput;
 		}
+		pickedNode = grid.GetChild<TextureRect>(0);
 	} 
 	public bool isInventoryFull(){
 		int countedItems = 0;
@@ -123,8 +124,8 @@ public partial class Inventory : Node
 	}
 	public bool isItemPressed;
 	Vector2 pressedItemPoint;
-	Vector2 originalPosition;
-	public TextureRect pickedNode = new TextureRect();
+	public Vector2 originalPosition;
+	public TextureRect pickedNode;
 	public void _ItemGuiInput(InputEvent @event){
 		if (@event is InputEventMouseButton mb){
 			if (mb.ButtonIndex == MouseButton.Left && mb.Pressed){
@@ -138,9 +139,13 @@ public partial class Inventory : Node
 						if(shouldPickUp){
 							pickedNode = nod;
 							originalPosition = pickedNode.Position;
+							moveItemTo(pickedNode.GetIndex(), nod.GetIndex());
+							nod.Texture = pickedNode.Texture;
+							pickedNode.Texture = stored[pickedNode.GetIndex()].modelTextureRect.Texture;
 							pickedNode.ZIndex = 10;
 							EmitSignal(SignalName.onFocus, inventoryName);
-							return;
+							if (stored[pickedNode.GetIndex()].id != 0)
+								return;
 						}
 					}
 				}
@@ -148,12 +153,10 @@ public partial class Inventory : Node
 					pressedItemPoint = mb.GlobalPosition;
 					bool shouldPickUp = false;
 					foreach(TextureRect nod in grid.GetChildren()){
-						if(nod == pickedNode)
+						if(nod == pickedNode) 
 							continue;
 						shouldPickUp = nod.GetGlobalRect().HasPoint(pressedItemPoint);
 						if (shouldPickUp){
-							GD.Print(pickedNode.GetIndex());
-							GD.Print(nod.GetIndex());
 							pickedNode.Position = nod.Position; //move old node to new one position.
 							moveItemTo(pickedNode.GetIndex(), nod.GetIndex());
 							nod.Texture = pickedNode.Texture;
@@ -165,11 +168,11 @@ public partial class Inventory : Node
 								return;
 						}
 					}
-					InvSignal signalInfo = new InvSignal(inventoryName, pickedNode.GetIndex());
-					EmitSignal(SignalName.itemInventoryDirection, signalInfo);
 					isItemPressed = false;
 					pickedNode.ZIndex = 0;
 					pickedNode.Position = originalPosition;
+					InvSignal signalInfo = new InvSignal(inventoryName, pickedNode.GetIndex());
+					EmitSignal(SignalName.itemInventoryDirection, signalInfo);
 				}
 			}	
 		}
