@@ -6,14 +6,14 @@ public partial class autoload_1 : Node
     public List<Inventory> InventoriesList { get; set; } = new List<Inventory>();
     public Item OnItemOnHand { get; set; }
 
-    public void addToInventories(Inventory newInv)
+    public void AddToInventories(Inventory newInv)
     {
         InventoriesList.Add(newInv);
-        newInv.itemInventoryDirection += moveItem;
-        newInv.onFocus += changeFocus;
+        newInv.itemInventoryDirection += MoveItem;
+        newInv.onFocus += ChangeFocus;
     }
 
-     void moveItem(InvSignal info)
+     void MoveItem(InvSignal info)
     {
         Vector2 mousePos = GetViewport().GetMousePosition();
         int indexOfPrimaryInv = 0;
@@ -36,7 +36,7 @@ public partial class autoload_1 : Node
                 shouldPickUp = rct.GetGlobalRect().HasPoint(mousePos);
                 if (shouldPickUp)
                 {
-                    InventoriesList[indexOfPrimaryInv].exchangeItems(InventoriesList[i], info.itemIndex, rct.GetIndex());
+                    InventoriesList[indexOfPrimaryInv].ExchangeItems(InventoriesList[i], info.itemIndex, rct.GetIndex());
                     rct.Texture = InventoriesList[i].Stored[rct.GetIndex()].modelTextureRect.Texture;
                     InventoriesList[i].pickedNode = rct;
                     InventoriesList[indexOfPrimaryInv].pickedNode = InventoriesList[indexOfPrimaryInv].Grid.GetChild<TextureRect>(info.itemIndex);
@@ -49,7 +49,7 @@ public partial class autoload_1 : Node
         }
     }
 
-     void changeFocus(string invName)
+     void ChangeFocus(string invName)
     {
         foreach (Inventory inv in InventoriesList)
         {

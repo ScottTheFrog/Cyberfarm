@@ -66,23 +66,23 @@ public partial class playerMain3D : RigidBody3D
             switch (angleToMouse)
             {
                 case < 22.5f:
-                    setFrameStanding(0);
+                    SetFrameStanding(0);
                     break;
 
                 case < 67.5f:
-                    setFrameStanding(1);
+                    SetFrameStanding(1);
                     break;
 
                 case < 112.5f:
-                    setFrameStanding(2);
+                    SetFrameStanding(2);
                     break;
 
                 case < 157.5f:
-                    setFrameStanding(3);
+                    SetFrameStanding(3);
                     break;
 
                 case < 180f:
-                    setFrameStanding(4);
+                    SetFrameStanding(4);
                     break;
             }
             return;
@@ -106,7 +106,7 @@ public partial class playerMain3D : RigidBody3D
         return;
     }
 
-     void setFrameStanding(int frame)
+     void SetFrameStanding(int frame)
     {
         sprite.Stop();
         sprite.Animation = "standing";

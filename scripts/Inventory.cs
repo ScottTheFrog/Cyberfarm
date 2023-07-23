@@ -28,21 +28,21 @@ public partial class Inventory : Node
         {
             Stored[i] = new Item(0);
         }
-        populateGrid();
+        PopulateGrid();
         CnvLayer = GetNode<CanvasLayer>("CanvasLayer");
         NPR = GetNode<NinePatchRect>("CanvasLayer/NinePatchRect");
         GetNode<RichTextLabel>("CanvasLayer/NinePatchRect/MarginContainer/RichTextLabel").Text = "[center]" + InventoryName + "[center]";
         autoload_1 autoloadNode = GetNode<autoload_1>("/root/Autoload1");
-        autoloadNode.addToInventories(this);
+        autoloadNode.AddToInventories(this);
     }
 
-    public void populateGrid()
+    public void PopulateGrid()
     {
         GridContainer backgroundGrid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainerBackground");
         Grid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainer");
         for (int i = 0; i < 15; i++)
         { //TEST CODE
-            addItem(new Item(new RandomNumberGenerator().RandiRange(1, 4)));
+            AddItem(new Item(new RandomNumberGenerator().RandiRange(1, 4)));
         }
         for (int i = 0; i < InventorySize; i++)
         {
@@ -59,7 +59,7 @@ public partial class Inventory : Node
         pickedNode = Grid.GetChild<TextureRect>(0);
     }
 
-    public bool isInventoryFull()
+    public bool IsInventoryFull()
     {
         int countedItems = 0;
         foreach (Item obj in Stored)
@@ -75,7 +75,7 @@ public partial class Inventory : Node
             return false;
     }
 
-    public int nextFreeIndex()
+    public int NextFreeIndex()
     {
         for (int i = 0; i < InventorySize; i++)
         {
@@ -87,23 +87,23 @@ public partial class Inventory : Node
         return -1;
     }
 
-    public void addItem(Item newItem)
+    public void AddItem(Item newItem)
     { //Adds a new item.
-        if (isInventoryFull())
+        if (IsInventoryFull())
             return;     //If inventory is full, then do nothing.
-        Stored[nextFreeIndex()] = newItem;
+        Stored[NextFreeIndex()] = newItem;
     }
 
-    public bool transferItemTo(Inventory otherInventory, int itemIndex)
+    public bool TransferItemTo(Inventory otherInventory, int itemIndex)
     { //Moves item from inventory to another.
-        if (otherInventory.isInventoryFull())
+        if (otherInventory.IsInventoryFull())
             return false;       //If inventory is full, then do nothing.
-        otherInventory.Stored[otherInventory.nextFreeIndex()] = Stored[itemIndex];
+        otherInventory.Stored[otherInventory.NextFreeIndex()] = Stored[itemIndex];
         Stored[itemIndex] = new Item(0);
         return true;
     }
 
-    public void exchangeItems(Inventory otherInventory, int itemIndex, int otherItemIndex)
+    public void ExchangeItems(Inventory otherInventory, int itemIndex, int otherItemIndex)
     {
         Item otherItem = otherInventory.Stored[otherItemIndex];
         GD.Print(otherItemIndex);
@@ -112,11 +112,11 @@ public partial class Inventory : Node
         Stored[itemIndex] = otherItem;
     }
 
-    public int getItemId(int itemIndex) => Stored[itemIndex].id;
+    public int GetItemId(int itemIndex) => Stored[itemIndex].id;
 
-    public string getItemName(int itemIndex) => Stored[itemIndex].name;
+    public string GetItemName(int itemIndex) => Stored[itemIndex].name;
 
-    public void consumeItem(int itemIndex)
+    public void ConsumeItem(int itemIndex)
     {
         if (Stored[itemIndex].atributes.Contains(ItemBase.typeChart[1]))
         { // If attributes contains consumable
@@ -124,7 +124,7 @@ public partial class Inventory : Node
         }
     }
 
-    public void moveItemTo(int fromIndex, int toIndex)
+    public void MoveItemTo(int fromIndex, int toIndex)
     {
         Item tempItem = Stored[toIndex];
         Stored[toIndex] = Stored[fromIndex];
@@ -133,7 +133,7 @@ public partial class Inventory : Node
 
     public override void _Process(double delta)
     {
-        movePickedItem();
+        MovePickedItem();
     }
 
     bool isNPRPressed;
@@ -185,7 +185,7 @@ public partial class Inventory : Node
                         {
                             pickedNode = nod;
                             originalPosition = pickedNode.Position;
-                            moveItemTo(pickedNode.GetIndex(), nod.GetIndex());
+                            MoveItemTo(pickedNode.GetIndex(), nod.GetIndex());
                             nod.Texture = pickedNode.Texture;
                             pickedNode.Texture = Stored[pickedNode.GetIndex()].modelTextureRect.Texture;
                             pickedNode.ZIndex = 10;
@@ -207,7 +207,7 @@ public partial class Inventory : Node
                         if (shouldPickUp)
                         {
                             pickedNode.Position = nod.Position; //move old node to new one position.
-                            moveItemTo(pickedNode.GetIndex(), nod.GetIndex());
+                            MoveItemTo(pickedNode.GetIndex(), nod.GetIndex());
                             nod.Texture = pickedNode.Texture;
                             pickedNode.Texture = Stored[pickedNode.GetIndex()].modelTextureRect.Texture;
                             pickedNode.ZIndex = 10;
@@ -227,7 +227,7 @@ public partial class Inventory : Node
         }
     }
 
-    public void movePickedItem()
+    public void MovePickedItem()
     {
         if (isItemPressed)
             pickedNode.Position += GetViewport().GetMousePosition() - pickedNode.Position - NPR.Position - Grid.Position - new Vector2(16, 16);
@@ -263,7 +263,7 @@ public class Item
         id = _id;
         name = _name;
         atributes = _atributes;
-        setTextureFromId();
+        SetTextureFromId();
     }
 
     public Item(int _id)
@@ -271,15 +271,15 @@ public class Item
         id = _id;
         name = itmb.itemArray[_id].name;
         atributes = itmb.itemArray[_id].atributes;
-        setTextureFromId();
+        SetTextureFromId();
     }
 
-    public Vector2 atlasCoordsFromID() => new Vector2(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
+    public Vector2 AtlasCoordsFromID() => new Vector2(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
 
-    void setTextureFromId()
+    void SetTextureFromId()
     {
         AtlasTexture newAtlasInstance = (AtlasTexture)ItemBase.itemAtlas.Duplicate();
-        newAtlasInstance.Region = new Rect2(atlasCoordsFromID(), new Vector2(32, 32));
+        newAtlasInstance.Region = new Rect2(AtlasCoordsFromID(), new Vector2(32, 32));
         modelTextureRect.Texture = newAtlasInstance;
     }
 }
