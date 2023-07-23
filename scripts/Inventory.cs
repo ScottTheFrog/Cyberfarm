@@ -124,12 +124,8 @@ public partial class Inventory : Node
         }
     }
 
-    public void MoveItemTo(int fromIndex, int toIndex)
-    {
-        Item tempItem = Stored[toIndex];
-        Stored[toIndex] = Stored[fromIndex];
-        Stored[fromIndex] = tempItem;
-    }
+    public void MoveItemTo(int fromIndex, int toIndex) =>
+        (Stored[fromIndex], Stored[toIndex]) = (Stored[toIndex], Stored[fromIndex]);
 
     public override void _Process(double delta)
     {
