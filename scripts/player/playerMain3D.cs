@@ -24,10 +24,7 @@ public partial class playerMain3D : RigidBody3D
         camera = GetNode<Camera3D>("Camera3D");
     }
 
-    public void Input()
-    {
-        direction = Godot.Input.GetVector("move_left", "move_right", "move_up", "move_down");
-    }
+    public void Input() => direction = Godot.Input.GetVector("move_left", "move_right", "move_up", "move_down");
 
     public void Movement()
     {

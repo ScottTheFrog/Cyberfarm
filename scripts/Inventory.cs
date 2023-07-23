@@ -112,15 +112,9 @@ public partial class Inventory : Node
         stored[itemIndex] = otherItem;
     }
 
-    public int getItemId(int itemIndex)
-    {
-        return stored[itemIndex].id;
-    }
+    public int getItemId(int itemIndex) => stored[itemIndex].id;
 
-    public string getItemName(int itemIndex)
-    {
-        return stored[itemIndex].name;
-    }
+    public string getItemName(int itemIndex) => stored[itemIndex].name;
 
     public void consumeItem(int itemIndex)
     {
@@ -142,7 +136,7 @@ public partial class Inventory : Node
         movePickedItem();
     }
 
-     bool isNPRPressed;
+    bool isNPRPressed;
      Vector2 pressedNPRPoint;
 
     public void _GuiInput(InputEvent @event)
@@ -280,12 +274,9 @@ public class Item
         setTextureFromId();
     }
 
-    public Vector2 atlasCoordsFromID()
-    {
-        return new Vector2(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
-    }
+    public Vector2 atlasCoordsFromID() => new Vector2(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
 
-     void setTextureFromId()
+    void setTextureFromId()
     {
         AtlasTexture newAtlasInstance = (AtlasTexture)ItemBase.itemAtlas.Duplicate();
         newAtlasInstance.Region = new Rect2(atlasCoordsFromID(), new Vector2(32, 32));

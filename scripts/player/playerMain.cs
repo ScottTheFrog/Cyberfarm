@@ -42,10 +42,7 @@ public partial class playerMain : RigidBody2D
     [Signal]
     public delegate void ChangedSpriteScaleEventHandler(float num);
 
-    void ChangeSpriteScale(float num)
-    {
-        sprite.Scale = new Vector2(num, 1);
-    }
+    void ChangeSpriteScale(float num) => sprite.Scale = new Vector2(num, 1);
 
     [Signal]
     public delegate void ChangedSpriteIndexEventHandler(int num);
