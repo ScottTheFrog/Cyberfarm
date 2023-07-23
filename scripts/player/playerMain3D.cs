@@ -2,21 +2,21 @@ using Godot;
 
 public partial class playerMain3D : RigidBody3D
 {
-    private float SPEED = 2f;
-    private Vector2 direction = Vector2.Zero;
-    private int horizontalFacingDirection = 1;
-    private int animationIndex = 0;
-    private bool isMoving;
+     float SPEED = 2f;
+     Vector2 direction = Vector2.Zero;
+     int horizontalFacingDirection = 1;
+     int animationIndex = 0;
+     bool isMoving;
 
-    private string[] animationNames = new string[]
+     string[] animationNames = new string[]
     {"walking_back",
      "walking_back_right",
      "walking_right",
      "walking_forward_right",
      "walking_forward"};
 
-    private AnimatedSprite3D sprite;
-    private Camera3D camera;
+     AnimatedSprite3D sprite;
+     Camera3D camera;
 
     public override void _Ready()
     {
@@ -109,7 +109,7 @@ public partial class playerMain3D : RigidBody3D
         return;
     }
 
-    private void setFrameStanding(int frame)
+     void setFrameStanding(int frame)
     {
         sprite.Stop();
         sprite.Animation = "standing";

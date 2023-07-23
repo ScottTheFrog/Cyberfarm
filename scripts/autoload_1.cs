@@ -13,7 +13,7 @@ public partial class autoload_1 : Node
         newInv.onFocus += changeFocus;
     }
 
-    private void moveItem(InvSignal info)
+     void moveItem(InvSignal info)
     {
         Vector2 mousePos = GetViewport().GetMousePosition();
         int indexOfPrimaryInv = 0;
@@ -49,7 +49,7 @@ public partial class autoload_1 : Node
         }
     }
 
-    private void changeFocus(string invName)
+     void changeFocus(string invName)
     {
         foreach (Inventory inv in inventoriesList)
         {

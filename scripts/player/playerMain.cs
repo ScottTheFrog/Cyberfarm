@@ -2,22 +2,22 @@ using Godot;
 
 public partial class playerMain : RigidBody2D
 {
-    private float SPEED = 20f;
-    private const float STEPIMPULSE = 5f; //Impulse for each step
-    private Vector2 direction = Vector2.Zero;
-    private int horizontalFacingDirection = 1;
-    private int animationIndex = 0;
-    private bool isMoving;
+    float SPEED = 20f;
+    const float STEPIMPULSE = 5f; //Impulse for each step
+    Vector2 direction = Vector2.Zero;
+    int horizontalFacingDirection = 1;
+    int animationIndex = 0;
+    bool isMoving;
 
-    private string[] animationNames = new string[]
+    string[] animationNames = new string[]
     {"walking_back",
      "walking_back_right",
      "walking_right",
      "walking_forward_right",
      "walking_forward"};
 
-    private AnimatedSprite2D sprite;
-    private Timer stepTimer;
+    AnimatedSprite2D sprite;
+    Timer stepTimer;
 
     public override void _Ready()
     {
@@ -42,7 +42,7 @@ public partial class playerMain : RigidBody2D
     [Signal]
     public delegate void ChangedSpriteScaleEventHandler(float num);
 
-    private void ChangeSpriteScale(float num)
+    void ChangeSpriteScale(float num)
     {
         sprite.Scale = new Vector2(num, 1);
     }
@@ -50,7 +50,7 @@ public partial class playerMain : RigidBody2D
     [Signal]
     public delegate void ChangedSpriteIndexEventHandler(int num);
 
-    private void ChangeSpriteIndex(int num)
+    void ChangeSpriteIndex(int num)
     { //function only used when the player is not doing any animation (standing)
         sprite.Stop();
         sprite.Animation = "standing";

@@ -142,8 +142,8 @@ public partial class Inventory : Node
         movePickedItem();
     }
 
-    private bool isNPRPressed;
-    private Vector2 pressedNPRPoint;
+     bool isNPRPressed;
+     Vector2 pressedNPRPoint;
 
     public void _GuiInput(InputEvent @event)
     { //Dragging window, this function is connected to the NPR
@@ -168,7 +168,7 @@ public partial class Inventory : Node
     }
 
     public bool isItemPressed;
-    private Vector2 pressedItemPoint;
+     Vector2 pressedItemPoint;
     public Vector2 originalPosition;
     public TextureRect pickedNode;
 
@@ -259,7 +259,7 @@ public class Item
     public int rarity = 0;
     public string[] atributes;
     public TextureRect modelTextureRect = new TextureRect();
-    private ItemBase itmb = new ItemBase(); // every time we do this it, creates another static class I HATE DOING THIS, I CANT DO TUPLES BECAAUSE THEY "DONT EXIST"
+     ItemBase itmb = new ItemBase(); // every time we do this it, creates another static class I HATE DOING THIS, I CANT DO TUPLES BECAAUSE THEY "DONT EXIST"
 
     public Item()
     { }
@@ -285,7 +285,7 @@ public class Item
         return new Vector2(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
     }
 
-    private void setTextureFromId()
+     void setTextureFromId()
     {
         AtlasTexture newAtlasInstance = (AtlasTexture)ItemBase.itemAtlas.Duplicate();
         newAtlasInstance.Region = new Rect2(atlasCoordsFromID(), new Vector2(32, 32));
