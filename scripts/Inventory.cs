@@ -8,12 +8,12 @@ public partial class Inventory : Node
     public string InventoryName { get; set; } = "Default Inventory Name";
 
     [Export]
-    public int inventorySize = 30; //Default amount of items for player, not so for storage units.
+    public int InventorySize { get; set; } = 30; //Default amount of items for player, not so for storage units.
 
-    public Item[] stored; //Array containing said items.
-    public NinePatchRect NPR;
-    public GridContainer grid;
-    public CanvasLayer cnvLayer;
+    public Item[] Stored { get; set; } //Array containing said items.
+    public NinePatchRect NPR { get; set; }
+    public GridContainer Grid { get; set; }
+    public CanvasLayer CnvLayer { get; set; }
 
     [Signal]
     public delegate void itemInventoryDirectionEventHandler(InvSignal info);
@@ -23,13 +23,13 @@ public partial class Inventory : Node
 
     public override void _Ready()
     {
-        stored = new Item[inventorySize];
-        for (int i = 0; i < inventorySize; i++)
+        Stored = new Item[InventorySize];
+        for (int i = 0; i < InventorySize; i++)
         {
-            stored[i] = new Item(0);
+            Stored[i] = new Item(0);
         }
         populateGrid();
-        cnvLayer = GetNode<CanvasLayer>("CanvasLayer");
+        CnvLayer = GetNode<CanvasLayer>("CanvasLayer");
         NPR = GetNode<NinePatchRect>("CanvasLayer/NinePatchRect");
         GetNode<RichTextLabel>("CanvasLayer/NinePatchRect/MarginContainer/RichTextLabel").Text = "[center]" + InventoryName + "[center]";
         autoload_1 autoloadNode = GetNode<autoload_1>("/root/Autoload1");
@@ -39,37 +39,37 @@ public partial class Inventory : Node
     public void populateGrid()
     {
         GridContainer backgroundGrid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainerBackground");
-        grid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainer");
+        Grid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainer");
         for (int i = 0; i < 15; i++)
         { //TEST CODE
             addItem(new Item(new RandomNumberGenerator().RandiRange(1, 4)));
         }
-        for (int i = 0; i < inventorySize; i++)
+        for (int i = 0; i < InventorySize; i++)
         {
             TextureRect backgroundRect = new TextureRect();
             backgroundRect.Texture = ItemBase.emptyItemFrame;
             backgroundGrid.AddChild(backgroundRect);
-            TextureRect foregroundRect = stored[i].modelTextureRect.Duplicate() as TextureRect;
-            grid.AddChild(foregroundRect);
+            TextureRect foregroundRect = Stored[i].modelTextureRect.Duplicate() as TextureRect;
+            Grid.AddChild(foregroundRect);
         }
-        foreach (TextureRect tr in grid.GetChildren())
+        foreach (TextureRect tr in Grid.GetChildren())
         {
             tr.GuiInput += _ItemGuiInput;
         }
-        pickedNode = grid.GetChild<TextureRect>(0);
+        pickedNode = Grid.GetChild<TextureRect>(0);
     }
 
     public bool isInventoryFull()
     {
         int countedItems = 0;
-        foreach (Item obj in stored)
+        foreach (Item obj in Stored)
         {
             if (obj.id != 0)
             {
                 countedItems++;
             }
         }
-        if (countedItems == inventorySize)
+        if (countedItems == InventorySize)
             return true;
         else
             return false;
@@ -77,9 +77,9 @@ public partial class Inventory : Node
 
     public int nextFreeIndex()
     {
-        for (int i = 0; i < inventorySize; i++)
+        for (int i = 0; i < InventorySize; i++)
         {
-            if (stored[i].id == 0)
+            if (Stored[i].id == 0)
             {
                 return i;
             }
@@ -91,44 +91,44 @@ public partial class Inventory : Node
     { //Adds a new item.
         if (isInventoryFull())
             return;     //If inventory is full, then do nothing.
-        stored[nextFreeIndex()] = newItem;
+        Stored[nextFreeIndex()] = newItem;
     }
 
     public bool transferItemTo(Inventory otherInventory, int itemIndex)
     { //Moves item from inventory to another.
         if (otherInventory.isInventoryFull())
             return false;       //If inventory is full, then do nothing.
-        otherInventory.stored[otherInventory.nextFreeIndex()] = stored[itemIndex];
-        stored[itemIndex] = new Item(0);
+        otherInventory.Stored[otherInventory.nextFreeIndex()] = Stored[itemIndex];
+        Stored[itemIndex] = new Item(0);
         return true;
     }
 
     public void exchangeItems(Inventory otherInventory, int itemIndex, int otherItemIndex)
     {
-        Item otherItem = otherInventory.stored[otherItemIndex];
+        Item otherItem = otherInventory.Stored[otherItemIndex];
         GD.Print(otherItemIndex);
         GD.Print(itemIndex);
-        otherInventory.stored[otherItemIndex] = stored[itemIndex];
-        stored[itemIndex] = otherItem;
+        otherInventory.Stored[otherItemIndex] = Stored[itemIndex];
+        Stored[itemIndex] = otherItem;
     }
 
-    public int getItemId(int itemIndex) => stored[itemIndex].id;
+    public int getItemId(int itemIndex) => Stored[itemIndex].id;
 
-    public string getItemName(int itemIndex) => stored[itemIndex].name;
+    public string getItemName(int itemIndex) => Stored[itemIndex].name;
 
     public void consumeItem(int itemIndex)
     {
-        if (stored[itemIndex].atributes.Contains(ItemBase.typeChart[1]))
+        if (Stored[itemIndex].atributes.Contains(ItemBase.typeChart[1]))
         { // If attributes contains consumable
-            stored[itemIndex] = new Item(); //Erase item
+            Stored[itemIndex] = new Item(); //Erase item
         }
     }
 
     public void moveItemTo(int fromIndex, int toIndex)
     {
-        Item tempItem = stored[toIndex];
-        stored[toIndex] = stored[fromIndex];
-        stored[fromIndex] = tempItem;
+        Item tempItem = Stored[toIndex];
+        Stored[toIndex] = Stored[fromIndex];
+        Stored[fromIndex] = tempItem;
     }
 
     public override void _Process(double delta)
@@ -178,7 +178,7 @@ public partial class Inventory : Node
                     isItemPressed = true;
 
                     bool shouldPickUp = false;
-                    foreach (TextureRect nod in grid.GetChildren())
+                    foreach (TextureRect nod in Grid.GetChildren())
                     {
                         shouldPickUp = nod.GetGlobalRect().HasPoint(pressedItemPoint);
                         if (shouldPickUp)
@@ -187,10 +187,10 @@ public partial class Inventory : Node
                             originalPosition = pickedNode.Position;
                             moveItemTo(pickedNode.GetIndex(), nod.GetIndex());
                             nod.Texture = pickedNode.Texture;
-                            pickedNode.Texture = stored[pickedNode.GetIndex()].modelTextureRect.Texture;
+                            pickedNode.Texture = Stored[pickedNode.GetIndex()].modelTextureRect.Texture;
                             pickedNode.ZIndex = 10;
                             EmitSignal(SignalName.onFocus, InventoryName);
-                            if (stored[pickedNode.GetIndex()].id != 0)
+                            if (Stored[pickedNode.GetIndex()].id != 0)
                                 return;
                         }
                     }
@@ -199,7 +199,7 @@ public partial class Inventory : Node
                 {
                     pressedItemPoint = mb.GlobalPosition;
                     bool shouldPickUp = false;
-                    foreach (TextureRect nod in grid.GetChildren())
+                    foreach (TextureRect nod in Grid.GetChildren())
                     {
                         if (nod == pickedNode)
                             continue;
@@ -209,11 +209,11 @@ public partial class Inventory : Node
                             pickedNode.Position = nod.Position; //move old node to new one position.
                             moveItemTo(pickedNode.GetIndex(), nod.GetIndex());
                             nod.Texture = pickedNode.Texture;
-                            pickedNode.Texture = stored[pickedNode.GetIndex()].modelTextureRect.Texture;
+                            pickedNode.Texture = Stored[pickedNode.GetIndex()].modelTextureRect.Texture;
                             pickedNode.ZIndex = 10;
                             EmitSignal(SignalName.onFocus, InventoryName);
 
-                            if (stored[pickedNode.GetIndex()].id != 0)
+                            if (Stored[pickedNode.GetIndex()].id != 0)
                                 return;
                         }
                     }
@@ -230,7 +230,7 @@ public partial class Inventory : Node
     public void movePickedItem()
     {
         if (isItemPressed)
-            pickedNode.Position += GetViewport().GetMousePosition() - pickedNode.Position - NPR.Position - grid.Position - new Vector2(16, 16);
+            pickedNode.Position += GetViewport().GetMousePosition() - pickedNode.Position - NPR.Position - Grid.Position - new Vector2(16, 16);
     }
 }
 

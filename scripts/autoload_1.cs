@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 public partial class autoload_1 : Node
 {
-    public List<Inventory> inventoriesList = new List<Inventory>();
-    public Item onItemOnHand;
+    public List<Inventory> InventoriesList { get; set; } = new List<Inventory>();
+    public Item OnItemOnHand { get; set; }
 
     public void addToInventories(Inventory newInv)
     {
-        inventoriesList.Add(newInv);
+        InventoriesList.Add(newInv);
         newInv.itemInventoryDirection += moveItem;
         newInv.onFocus += changeFocus;
     }
@@ -17,32 +17,32 @@ public partial class autoload_1 : Node
     {
         Vector2 mousePos = GetViewport().GetMousePosition();
         int indexOfPrimaryInv = 0;
-        for (int i = 0; i < inventoriesList.Count; i++)
+        for (int i = 0; i < InventoriesList.Count; i++)
         {
-            if (inventoriesList[i].InventoryName == info.invName)
+            if (InventoriesList[i].InventoryName == info.invName)
             {
                 indexOfPrimaryInv = i;
             }
         }
-        for (int i = 0; i < inventoriesList.Count; i++)
+        for (int i = 0; i < InventoriesList.Count; i++)
         {
-            if (inventoriesList[i].InventoryName == info.invName)
+            if (InventoriesList[i].InventoryName == info.invName)
             {
                 continue;
             }
             bool shouldPickUp = false;
-            foreach (TextureRect rct in inventoriesList[i].grid.GetChildren())
+            foreach (TextureRect rct in InventoriesList[i].Grid.GetChildren())
             {
                 shouldPickUp = rct.GetGlobalRect().HasPoint(mousePos);
                 if (shouldPickUp)
                 {
-                    inventoriesList[indexOfPrimaryInv].exchangeItems(inventoriesList[i], info.itemIndex, rct.GetIndex());
-                    rct.Texture = inventoriesList[i].stored[rct.GetIndex()].modelTextureRect.Texture;
-                    inventoriesList[i].pickedNode = rct;
-                    inventoriesList[indexOfPrimaryInv].pickedNode = inventoriesList[indexOfPrimaryInv].grid.GetChild<TextureRect>(info.itemIndex);
-                    inventoriesList[indexOfPrimaryInv].pickedNode.Texture = inventoriesList[indexOfPrimaryInv].stored[info.itemIndex].modelTextureRect.Texture;
-                    inventoriesList[indexOfPrimaryInv].isItemPressed = true;
-                    inventoriesList[indexOfPrimaryInv].originalPosition = inventoriesList[indexOfPrimaryInv].pickedNode.Position;
+                    InventoriesList[indexOfPrimaryInv].exchangeItems(InventoriesList[i], info.itemIndex, rct.GetIndex());
+                    rct.Texture = InventoriesList[i].Stored[rct.GetIndex()].modelTextureRect.Texture;
+                    InventoriesList[i].pickedNode = rct;
+                    InventoriesList[indexOfPrimaryInv].pickedNode = InventoriesList[indexOfPrimaryInv].Grid.GetChild<TextureRect>(info.itemIndex);
+                    InventoriesList[indexOfPrimaryInv].pickedNode.Texture = InventoriesList[indexOfPrimaryInv].Stored[info.itemIndex].modelTextureRect.Texture;
+                    InventoriesList[indexOfPrimaryInv].isItemPressed = true;
+                    InventoriesList[indexOfPrimaryInv].originalPosition = InventoriesList[indexOfPrimaryInv].pickedNode.Position;
                     return;
                 }
             }
@@ -51,12 +51,12 @@ public partial class autoload_1 : Node
 
      void changeFocus(string invName)
     {
-        foreach (Inventory inv in inventoriesList)
+        foreach (Inventory inv in InventoriesList)
         {
             if (inv.InventoryName == invName)
-                inv.cnvLayer.Layer = 2;
+                inv.CnvLayer.Layer = 2;
             else
-                inv.cnvLayer.Layer = 1;
+                inv.CnvLayer.Layer = 1;
         }
     }
 
