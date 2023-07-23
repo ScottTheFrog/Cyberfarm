@@ -30,10 +30,10 @@ public partial class autoload_1 : Node
             {
                 continue;
             }
-            bool shouldPickUp = false;
+
             foreach (TextureRect rct in InventoriesList[i].Grid.GetChildren())
             {
-                shouldPickUp = rct.GetGlobalRect().HasPoint(mousePos);
+                bool shouldPickUp = rct.GetGlobalRect().HasPoint(mousePos);
                 if (shouldPickUp)
                 {
                     InventoriesList[indexOfPrimaryInv].ExchangeItems(InventoriesList[i], info.itemIndex, rct.GetIndex());

@@ -172,11 +172,9 @@ public partial class Inventory : Node
                 {
                     pressedItemPoint = mb.GlobalPosition;
                     isItemPressed = true;
-
-                    bool shouldPickUp = false;
                     foreach (TextureRect nod in Grid.GetChildren())
                     {
-                        shouldPickUp = nod.GetGlobalRect().HasPoint(pressedItemPoint);
+                        bool shouldPickUp = nod.GetGlobalRect().HasPoint(pressedItemPoint);
                         if (shouldPickUp)
                         {
                             pickedNode = nod;
@@ -194,12 +192,11 @@ public partial class Inventory : Node
                 else
                 {
                     pressedItemPoint = mb.GlobalPosition;
-                    bool shouldPickUp = false;
                     foreach (TextureRect nod in Grid.GetChildren())
                     {
                         if (nod == pickedNode)
                             continue;
-                        shouldPickUp = nod.GetGlobalRect().HasPoint(pressedItemPoint);
+                        bool shouldPickUp = nod.GetGlobalRect().HasPoint(pressedItemPoint);
                         if (shouldPickUp)
                         {
                             pickedNode.Position = nod.Position; //move old node to new one position.
