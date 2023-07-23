@@ -46,7 +46,7 @@ public partial class Inventory : Node
         }
         for (int i = 0; i < InventorySize; i++)
         {
-            TextureRect backgroundRect = new TextureRect();
+            TextureRect backgroundRect = new();
             backgroundRect.Texture = ItemBase.emptyItemFrame;
             backgroundGrid.AddChild(backgroundRect);
             TextureRect foregroundRect = Stored[i].modelTextureRect.Duplicate() as TextureRect;
@@ -220,7 +220,7 @@ public partial class Inventory : Node
                     isItemPressed = false;
                     pickedNode.ZIndex = 0;
                     pickedNode.Position = originalPosition;
-                    InvSignal signalInfo = new InvSignal(InventoryName, pickedNode.GetIndex());
+                    InvSignal signalInfo = new(InventoryName, pickedNode.GetIndex());
                     EmitSignal(SignalName.itemInventoryDirection, signalInfo);
                 }
             }
@@ -252,8 +252,8 @@ public class Item
     public string name;
     public int rarity = 0;
     public string[] atributes;
-    public TextureRect modelTextureRect = new TextureRect();
-     ItemBase itmb = new ItemBase(); // every time we do this it, creates another static class I HATE DOING THIS, I CANT DO TUPLES BECAAUSE THEY "DONT EXIST"
+    public TextureRect modelTextureRect = new();
+     ItemBase itmb = new(); // every time we do this it, creates another static class I HATE DOING THIS, I CANT DO TUPLES BECAAUSE THEY "DONT EXIST"
 
     public Item()
     { }
@@ -274,7 +274,7 @@ public class Item
         SetTextureFromId();
     }
 
-    public Vector2 AtlasCoordsFromID() => new Vector2(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
+    public Vector2 AtlasCoordsFromID() => new(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
 
     void SetTextureFromId()
     {

@@ -29,7 +29,7 @@ public partial class playerMain3D : RigidBody3D
     public void Movement()
     {
         direction = direction.Rotated(Mathf.DegToRad(-45));
-        Vector3 planeDirection = new Vector3(direction.X, 0, direction.Y);
+        Vector3 planeDirection = new(direction.X, 0, direction.Y);
         if (direction != Vector2.Zero)
         {
             isMoving = true;
@@ -45,7 +45,7 @@ public partial class playerMain3D : RigidBody3D
             Vector2 mousePos = GetViewport().GetMousePosition();
             Vector3 rayOrigin = camera.ProjectRayOrigin(mousePos);
             Vector3 rayEnd = camera.ProjectRayNormal(mousePos) * 2000;
-            Godot.Collections.Array<Rid> excludeArray = new Godot.Collections.Array<Rid>();
+            Godot.Collections.Array<Rid> excludeArray = new();
             excludeArray.Add(GetRid());
             PhysicsRayQueryParameters3D parameters3D = PhysicsRayQueryParameters3D.Create(rayOrigin, rayEnd);
             parameters3D.Exclude = excludeArray;
@@ -55,7 +55,7 @@ public partial class playerMain3D : RigidBody3D
             {
                 positionLooked = (Vector3)rayArray["position"];
             }
-            Vector2 rotatedVector = new Vector2(GlobalPosition.X - positionLooked.X, GlobalPosition.Z- positionLooked.Z);
+            Vector2 rotatedVector = new(GlobalPosition.X - positionLooked.X, GlobalPosition.Z- positionLooked.Z);
             rotatedVector = rotatedVector.Rotated(Mathf.DegToRad(-45));
             float angleToMouse = Mathf.RadToDeg(Vector2.Zero.AngleToPoint(rotatedVector));
             if (angleToMouse - Mathf.Abs(angleToMouse) != 0)
