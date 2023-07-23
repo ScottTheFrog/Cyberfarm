@@ -100,7 +100,7 @@ public partial class playerMain3D : RigidBody3D
         }
         else
         {
-            animationMovIndex = Godot.Mathf.RoundToInt(Godot.Mathf.Abs(direction.X) + 1) + Godot.Mathf.RoundToInt(direction.Y);
+            animationMovIndex = Mathf.RoundToInt(Mathf.Abs(direction.X) + 1) + Mathf.RoundToInt(direction.Y);
         }
         sprite.Animation = animationNames[animationMovIndex];
         return;

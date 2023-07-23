@@ -29,7 +29,7 @@ public partial class playerMain : RigidBody2D
 
     public void Movement()
     {
-        direction = Godot.Input.GetVector("move_left", "move_right", "move_up", "move_down");
+        direction = Input.GetVector("move_left", "move_right", "move_up", "move_down");
         if (direction != Vector2.Zero && stepTimer.IsStopped() == true)
         {
             isMoving = true;
@@ -57,16 +57,16 @@ public partial class playerMain : RigidBody2D
     public void SetFacingDirection()
     {
         Vector2 MousePos = GetGlobalMousePosition();
-        int scalingFactor = Godot.Mathf.RoundToInt((MousePos - Position).Normalized().X);
+        int scalingFactor = Mathf.RoundToInt((MousePos - Position).Normalized().X);
         if (horizontalFacingDirection != scalingFactor && scalingFactor != 0 && direction == Vector2.Zero)
         {
             horizontalFacingDirection = scalingFactor;
             EmitSignal(SignalName.ChangedSpriteScale, scalingFactor);
         }
-        float indexChanged = 2 + Godot.Mathf.Round(2*(MousePos - Position).Normalized().Y);
+        float indexChanged = 2 + Mathf.Round(2*(MousePos - Position).Normalized().Y);
         if (direction.X != 0)
         {
-            EmitSignal(SignalName.ChangedSpriteScale, Godot.Mathf.RoundToInt(direction.X));
+            EmitSignal(SignalName.ChangedSpriteScale, Mathf.RoundToInt(direction.X));
         }
         if (direction != Vector2.Zero)
         {
@@ -78,7 +78,7 @@ public partial class playerMain : RigidBody2D
             }
             else
             {
-                animationMovIndex = Godot.Mathf.RoundToInt(Godot.Mathf.Abs(direction.X) + 1) + Godot.Mathf.RoundToInt(direction.Y);
+                animationMovIndex = Mathf.RoundToInt(Mathf.Abs(direction.X) + 1) + Mathf.RoundToInt(direction.Y);
             }
             sprite.Animation = animationNames[animationMovIndex];
             return;
