@@ -6,16 +6,21 @@ public partial class Inventory : Node
 {
     [Export]
     public string inventoryName { get; set; } = "Default Inventory Name";
+
     [Export]
     public int inventorySize = 30; //Default amount of items for player, not so for storage units.
+
     public Item[] stored; //Array containing said items.
     public NinePatchRect NPR;
     public GridContainer grid;
     public CanvasLayer cnvLayer;
+
     [Signal]
     public delegate void itemInventoryDirectionEventHandler(InvSignal info);
+
     [Signal]
     public delegate void onFocusEventHandler(string invName);
+
     public override void _Ready()
     {
         stored = new Item[inventorySize];
@@ -30,6 +35,7 @@ public partial class Inventory : Node
         autoload_1 autoloadNode = GetNode<autoload_1>("/root/Autoload1");
         autoloadNode.addToInventories(this);
     }
+
     public void populateGrid()
     {
         GridContainer backgroundGrid = GetNode<GridContainer>("CanvasLayer/NinePatchRect/MarginContainer/GridContainerBackground");
@@ -52,6 +58,7 @@ public partial class Inventory : Node
         }
         pickedNode = grid.GetChild<TextureRect>(0);
     }
+
     public bool isInventoryFull()
     {
         int countedItems = 0;
@@ -67,6 +74,7 @@ public partial class Inventory : Node
         else
             return false;
     }
+
     public int nextFreeIndex()
     {
         for (int i = 0; i < inventorySize; i++)
@@ -78,12 +86,14 @@ public partial class Inventory : Node
         }
         return -1;
     }
+
     public void addItem(Item newItem)
     { //Adds a new item.
         if (isInventoryFull())
             return;     //If inventory is full, then do nothing.
         stored[nextFreeIndex()] = newItem;
     }
+
     public bool transferItemTo(Inventory otherInventory, int itemIndex)
     { //Moves item from inventory to another.
         if (otherInventory.isInventoryFull())
@@ -92,6 +102,7 @@ public partial class Inventory : Node
         stored[itemIndex] = new Item(0);
         return true;
     }
+
     public void exchangeItems(Inventory otherInventory, int itemIndex, int otherItemIndex)
     {
         Item otherItem = otherInventory.stored[otherItemIndex];
@@ -100,14 +111,17 @@ public partial class Inventory : Node
         otherInventory.stored[otherItemIndex] = stored[itemIndex];
         stored[itemIndex] = otherItem;
     }
+
     public int getItemId(int itemIndex)
     {
         return stored[itemIndex].id;
     }
+
     public string getItemName(int itemIndex)
     {
         return stored[itemIndex].name;
     }
+
     public void consumeItem(int itemIndex)
     {
         if (stored[itemIndex].atributes.Contains(ItemBase.typeChart[1]))
@@ -115,18 +129,22 @@ public partial class Inventory : Node
             stored[itemIndex] = new Item(); //Erase item
         }
     }
+
     public void moveItemTo(int fromIndex, int toIndex)
     {
         Item tempItem = stored[toIndex];
         stored[toIndex] = stored[fromIndex];
         stored[fromIndex] = tempItem;
     }
+
     public override void _Process(double delta)
     {
         movePickedItem();
     }
-    bool isNPRPressed;
-    Vector2 pressedNPRPoint;
+
+    private bool isNPRPressed;
+    private Vector2 pressedNPRPoint;
+
     public void _GuiInput(InputEvent @event)
     { //Dragging window, this function is connected to the NPR
         if (@event is InputEventMouseButton mb)
@@ -148,10 +166,12 @@ public partial class Inventory : Node
             }
         }
     }
+
     public bool isItemPressed;
-    Vector2 pressedItemPoint;
+    private Vector2 pressedItemPoint;
     public Vector2 originalPosition;
     public TextureRect pickedNode;
+
     public void _ItemGuiInput(InputEvent @event)
     {
         if (@event is InputEventMouseButton mb)
@@ -212,22 +232,26 @@ public partial class Inventory : Node
             }
         }
     }
+
     public void movePickedItem()
     {
         if (isItemPressed)
             pickedNode.Position += GetViewport().GetMousePosition() - pickedNode.Position - NPR.Position - grid.Position - new Vector2(16, 16);
     }
 }
+
 public partial class InvSignal : GodotObject
 {
     public string invName { get; set; }
     public int itemIndex { get; set; }
+
     public InvSignal(string nam, int indx)
     {
         invName = nam;
         itemIndex = indx;
     }
 }
+
 public class Item
 {
     public int id;
@@ -236,7 +260,10 @@ public class Item
     public string[] atributes;
     public TextureRect modelTextureRect = new TextureRect();
     private ItemBase itmb = new ItemBase(); // every time we do this it, creates another static class I HATE DOING THIS, I CANT DO TUPLES BECAAUSE THEY "DONT EXIST"
-    public Item() { }
+
+    public Item()
+    { }
+
     public Item(int _id, string _name, string[] _atributes = null)
     {
         id = _id;
@@ -244,6 +271,7 @@ public class Item
         atributes = _atributes;
         setTextureFromId();
     }
+
     public Item(int _id)
     { //Create item with id.
         id = _id;
@@ -251,23 +279,27 @@ public class Item
         atributes = itmb.itemArray[_id].atributes;
         setTextureFromId();
     }
+
     public Vector2 atlasCoordsFromID()
     {
         return new Vector2(id * 32 - ((int)((id * 32) / ItemBase.AtlasSize) * ItemBase.AtlasSize), (int)((id * 32) / ItemBase.AtlasSize) * 32);
     }
-    void setTextureFromId()
+
+    private void setTextureFromId()
     {
         AtlasTexture newAtlasInstance = (AtlasTexture)ItemBase.itemAtlas.Duplicate();
         newAtlasInstance.Region = new Rect2(atlasCoordsFromID(), new Vector2(32, 32));
         modelTextureRect.Texture = newAtlasInstance;
     }
 }
+
 public class ItemBase
 {
     public static Texture2D emptyItemFrame = ResourceLoader.Load<Texture2D>("res://resources/sprites/items/ItemFrame.png");
     public static Texture2D selectedItemFrame = ResourceLoader.Load<Texture2D>("res://resources/sprites/items/ItemFrameSelected.png");
     public static AtlasTexture itemAtlas = ResourceLoader.Load<AtlasTexture>("res://resources/sprites/items/itemSheet.tres");
     public static int AtlasSize = 320;
+
     public (int index, string name, string[] atributes)[] itemArray = {
             (0, "Empty", new string[0]),
             (1, "Frightling Seed", new string[] {typeChart[0], typeChart[3]}),
@@ -275,6 +307,7 @@ public class ItemBase
             (3, "Soilbug Seed", new string[] {typeChart[0], typeChart[3]}),
             (4, "Shadeling Seed", new string[] {typeChart[0], typeChart[3]}),
         };
+
     public static string[] rarityChart = {
         "Garbage",
         "Shabby",
@@ -283,6 +316,7 @@ public class ItemBase
         "High-Grade",
         "Unreal"
         };
+
     public static string[] typeChart = {
         "canBePlanted",
         "consumable",

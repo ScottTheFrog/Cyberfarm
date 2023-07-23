@@ -1,18 +1,19 @@
 using Godot;
-using System;
 using System.Collections.Generic;
 
 public partial class autoload_1 : Node
 {
     public List<Inventory> inventoriesList = new List<Inventory>();
     public Item onItemOnHand;
+
     public void addToInventories(Inventory newInv)
     {
         inventoriesList.Add(newInv);
         newInv.itemInventoryDirection += moveItem;
         newInv.onFocus += changeFocus;
     }
-    void moveItem(InvSignal info)
+
+    private void moveItem(InvSignal info)
     {
         Vector2 mousePos = GetViewport().GetMousePosition();
         int indexOfPrimaryInv = 0;
@@ -47,7 +48,8 @@ public partial class autoload_1 : Node
             }
         }
     }
-    void changeFocus(string invName)
+
+    private void changeFocus(string invName)
     {
         foreach (Inventory inv in inventoriesList)
         {
@@ -57,6 +59,7 @@ public partial class autoload_1 : Node
                 inv.cnvLayer.Layer = 1;
         }
     }
+
     public override void _Process(double delta)
     {
     }

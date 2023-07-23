@@ -1,29 +1,34 @@
 using Godot;
-using System;
+
 public partial class playerMain3D : RigidBody3D
 {
-    float SPEED = 2f;
-    Vector2 direction = Vector2.Zero;
-    int horizontalFacingDirection = 1;
-    int animationIndex = 0;
-    bool isMoving;
-    string[] animationNames = new string[]
+    private float SPEED = 2f;
+    private Vector2 direction = Vector2.Zero;
+    private int horizontalFacingDirection = 1;
+    private int animationIndex = 0;
+    private bool isMoving;
+
+    private string[] animationNames = new string[]
     {"walking_back",
      "walking_back_right",
      "walking_right",
      "walking_forward_right",
      "walking_forward"};
-    AnimatedSprite3D sprite;
-    Camera3D camera;
+
+    private AnimatedSprite3D sprite;
+    private Camera3D camera;
+
     public override void _Ready()
     {
         sprite = GetNode<AnimatedSprite3D>("AnimatedSprite3D");
         camera = GetNode<Camera3D>("Camera3D");
     }
+
     public void Input()
     {
         direction = Godot.Input.GetVector("move_left", "move_right", "move_up", "move_down");
     }
+
     public void Movement()
     {
         direction = direction.Rotated(Mathf.DegToRad(-45));
@@ -34,6 +39,7 @@ public partial class playerMain3D : RigidBody3D
             ApplyCentralImpulse(planeDirection * SPEED);
         }
     }
+
     public void SetFacingDirection()
     {
         if (direction == Vector2.Zero)
@@ -65,15 +71,19 @@ public partial class playerMain3D : RigidBody3D
                 case < 22.5f:
                     setFrameStanding(0);
                     break;
+
                 case < 67.5f:
                     setFrameStanding(1);
                     break;
+
                 case < 112.5f:
                     setFrameStanding(2);
                     break;
+
                 case < 157.5f:
                     setFrameStanding(3);
                     break;
+
                 case < 180f:
                     setFrameStanding(4);
                     break;
@@ -98,17 +108,18 @@ public partial class playerMain3D : RigidBody3D
         sprite.Animation = animationNames[animationMovIndex];
         return;
     }
-    void setFrameStanding(int frame)
+
+    private void setFrameStanding(int frame)
     {
         sprite.Stop();
         sprite.Animation = "standing";
         sprite.Frame = frame;
     }
+
     public override void _Process(double delta)
     {
         Input();
         SetFacingDirection();
         Movement();
     }
-
 }
