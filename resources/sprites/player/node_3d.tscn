@@ -1,0 +1,82 @@
+[gd_scene load_steps=10 format=3 uid="uid://bo8smt50qrvwl"]
+
+[ext_resource type="Script" path="res://scripts/player/playerMain3D.cs" id="1_bpj66"]
+[ext_resource type="Texture2D" uid="uid://0n45pk5ep3jk" path="res://resources/sprites/textures/floor/tiles.png" id="1_fknkd"]
+[ext_resource type="SpriteFrames" uid="uid://drqpncp0b6pg1" path="res://resources/sprites/player/player.tres" id="1_xy1gg"]
+
+[sub_resource type="WorldBoundaryShape3D" id="WorldBoundaryShape3D_qouhj"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_nppwl"]
+albedo_texture = ExtResource("1_fknkd")
+uv1_scale = Vector3(4, 4, 4)
+texture_filter = 0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_qb0ha"]
+material = SubResource("StandardMaterial3D_nppwl")
+size = Vector2(10, 10)
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_dk62y"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0c1jm"]
+height = 0.001
+
+[sub_resource type="Environment" id="Environment_2nl2w"]
+ambient_light_color = Color(0.803922, 0.686275, 0.345098, 1)
+
+[node name="Node3D" type="Node3D"]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="."]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D"]
+shape = SubResource("WorldBoundaryShape3D_qouhj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D"]
+mesh = SubResource("PlaneMesh_qb0ha")
+
+[node name="RigidBody3D" type="RigidBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+lock_rotation = true
+linear_damp = 5.0
+script = ExtResource("1_bpj66")
+
+[node name="AnimatedSprite3D" type="AnimatedSprite3D" parent="RigidBody3D"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 0, -0.486817, 0)
+gi_mode = 2
+gi_lightmap_scale = 3
+pixel_size = 0.05
+shaded = true
+alpha_cut = 1
+texture_filter = 0
+render_priority = 2
+sprite_frames = ExtResource("1_xy1gg")
+animation = &"standing"
+frame = 4
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="RigidBody3D"]
+shape = SubResource("CapsuleShape3D_dk62y")
+
+[node name="Camera3D" type="Camera3D" parent="RigidBody3D"]
+transform = Transform3D(0.707107, -0.5, 0.5, 0, 0.707107, 0.707107, -0.707107, -0.5, 0.5, 5, 5, 5)
+projection = 1
+size = 10.0
+near = 0.044
+far = 54.29
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="RigidBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.735167, 0)
+visible = false
+cast_shadow = 3
+mesh = SubResource("CylinderMesh_0c1jm")
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.590201, 0.603869, 0.535728, 0.0378942, -0.683634, 0.72884, 0.806366, -0.409862, -0.426365, 0.782448, 1.82485, -0.312451)
+shadow_enabled = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_2nl2w")
+
+[node name="OmniLight3D" type="OmniLight3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.26288, 2.07756, 0.244592)
+visible = false
+shadow_enabled = true
+omni_range = 7.98988
