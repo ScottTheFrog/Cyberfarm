@@ -19,14 +19,14 @@ public partial class autoload_1 : Node
         int indexOfPrimaryInv = 0;
         for (int i = 0; i < inventoriesList.Count; i++)
         {
-            if (inventoriesList[i].inventoryName == info.invName)
+            if (inventoriesList[i].InventoryName == info.invName)
             {
                 indexOfPrimaryInv = i;
             }
         }
         for (int i = 0; i < inventoriesList.Count; i++)
         {
-            if (inventoriesList[i].inventoryName == info.invName)
+            if (inventoriesList[i].InventoryName == info.invName)
             {
                 continue;
             }
@@ -53,7 +53,7 @@ public partial class autoload_1 : Node
     {
         foreach (Inventory inv in inventoriesList)
         {
-            if (inv.inventoryName == invName)
+            if (inv.InventoryName == invName)
                 inv.cnvLayer.Layer = 2;
             else
                 inv.cnvLayer.Layer = 1;

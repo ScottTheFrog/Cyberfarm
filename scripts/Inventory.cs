@@ -5,7 +5,7 @@ using System.Linq;
 public partial class Inventory : Node
 {
     [Export]
-    public string inventoryName { get; set; } = "Default Inventory Name";
+    public string InventoryName { get; set; } = "Default Inventory Name";
 
     [Export]
     public int inventorySize = 30; //Default amount of items for player, not so for storage units.
@@ -31,7 +31,7 @@ public partial class Inventory : Node
         populateGrid();
         cnvLayer = GetNode<CanvasLayer>("CanvasLayer");
         NPR = GetNode<NinePatchRect>("CanvasLayer/NinePatchRect");
-        GetNode<RichTextLabel>("CanvasLayer/NinePatchRect/MarginContainer/RichTextLabel").Text = "[center]" + inventoryName + "[center]";
+        GetNode<RichTextLabel>("CanvasLayer/NinePatchRect/MarginContainer/RichTextLabel").Text = "[center]" + InventoryName + "[center]";
         autoload_1 autoloadNode = GetNode<autoload_1>("/root/Autoload1");
         autoloadNode.addToInventories(this);
     }
@@ -147,7 +147,7 @@ public partial class Inventory : Node
             {
                 pressedNPRPoint = mb.Position;
                 isNPRPressed = true;
-                EmitSignal(SignalName.onFocus, inventoryName);
+                EmitSignal(SignalName.onFocus, InventoryName);
             }
             else
                 isNPRPressed = false;
@@ -189,7 +189,7 @@ public partial class Inventory : Node
                             nod.Texture = pickedNode.Texture;
                             pickedNode.Texture = stored[pickedNode.GetIndex()].modelTextureRect.Texture;
                             pickedNode.ZIndex = 10;
-                            EmitSignal(SignalName.onFocus, inventoryName);
+                            EmitSignal(SignalName.onFocus, InventoryName);
                             if (stored[pickedNode.GetIndex()].id != 0)
                                 return;
                         }
@@ -211,7 +211,7 @@ public partial class Inventory : Node
                             nod.Texture = pickedNode.Texture;
                             pickedNode.Texture = stored[pickedNode.GetIndex()].modelTextureRect.Texture;
                             pickedNode.ZIndex = 10;
-                            EmitSignal(SignalName.onFocus, inventoryName);
+                            EmitSignal(SignalName.onFocus, InventoryName);
 
                             if (stored[pickedNode.GetIndex()].id != 0)
                                 return;
@@ -220,7 +220,7 @@ public partial class Inventory : Node
                     isItemPressed = false;
                     pickedNode.ZIndex = 0;
                     pickedNode.Position = originalPosition;
-                    InvSignal signalInfo = new InvSignal(inventoryName, pickedNode.GetIndex());
+                    InvSignal signalInfo = new InvSignal(InventoryName, pickedNode.GetIndex());
                     EmitSignal(SignalName.itemInventoryDirection, signalInfo);
                 }
             }
